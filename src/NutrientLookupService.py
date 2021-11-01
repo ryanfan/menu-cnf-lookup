@@ -119,12 +119,12 @@ class NutrientLookupService:
                             index + 2) + ",{1,2,3,4,5,6,7,8,9},1)))*{1,2,3,4,5,6,7,8,9})))")
                         for idx, num in enumerate([5, 6]):
                             s = "=VLOOKUP(F" + str(index + 2) + "&\":\"&J" + str(
-                                index + 2) + ",'CNF Data'!$B$1:$AI$" + str(len(result.index)) + "," + str(
+                                index + 2) + ",'CNF Data'!$B$1:$AI$" + str(len(result.index) + 1) + "," + str(
                                 num) + ",FALSE)"
                             recipes_df.iloc[[index], [9 + idx]] = s
                         for idx, num in enumerate([21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]):
                             s = "=VLOOKUP(F" + str(index + 2) + "&\":\"&J" + str(
-                                index + 2) + ",'CNF Data'!$B$1:$AI$2" + str(len(result.index)) + "," + str(
+                                index + 2) + ",'CNF Data'!$B$1:$AI$2" + str(len(result.index) + 1) + "," + str(
                                 num) + ",FALSE) * P" + str(index + 2)
                             recipes_df.iloc[[index], [15 + idx]] = s
                         premade_measurements.append("")
@@ -144,7 +144,7 @@ class NutrientLookupService:
                             index + 2) + ",{1,2,3,4,5,6,7,8,9},1)))*{1,2,3,4,5,6,7,8,9})))")
                         for idx, num in enumerate([5, 6]):
                             s = "=VLOOKUP(F" + str(index + 2) + "&\":\"&J" + str(
-                                index + 2) + ",'CNF Data'!$B$1:$AI$" + str(len(result.index)) + "," + str(
+                                index + 2) + ",'CNF Data'!$B$1:$AI$" + str(len(result.index) + 1) + "," + str(
                                 num) + ",FALSE)"
                             recipes_df.iloc[[index], [9 + idx]] = s
                         for idx, num in enumerate([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]):
