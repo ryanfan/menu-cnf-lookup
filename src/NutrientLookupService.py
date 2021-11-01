@@ -23,7 +23,6 @@ class NutrientLookupService:
         recipes_df = self.recipes_excel.read_excel()
 
         premades = MicrosoftExcelService.MicrosoftExcelService(r'data/1-Premade food nutrition.xlsx').read_excel()
-        monica = MicrosoftExcelService.MicrosoftExcelService(r'data/4- Final Nutrition Analysis.xlsx').read_excel()
 
         unique_cnf_ingredients = self.recipes_excel.get_unique_values_from_column_name('FoodID')
         UNIQUE_CNF_INGREDIENTS_LIST = tuple(unique_cnf_ingredients.tolist())
@@ -105,7 +104,6 @@ class NutrientLookupService:
             tmp.append(values)
         recipes_df['new_col'] = tmp
 
-
         with pd.ExcelWriter(r'data/2-Excel-Writer-Output.xlsx', engine='xlsxwriter') as writer:
             amounts, units, in_grams, ratios, premade_measurements, premade_units = [], [], [], [], [], []
             start_row = 2
@@ -121,11 +119,13 @@ class NutrientLookupService:
                             index + 2) + ",{1,2,3,4,5,6,7,8,9},1)))*{1,2,3,4,5,6,7,8,9})))")
                         for idx, num in enumerate([5, 6]):
                             s = "=VLOOKUP(F" + str(index + 2) + "&\":\"&J" + str(
-                                index + 2) + ",'CNF Data'!$B$1:$AI$" + str(len(result.index)) + "," + str(num) + ",FALSE)"
+                                index + 2) + ",'CNF Data'!$B$1:$AI$" + str(len(result.index)) + "," + str(
+                                num) + ",FALSE)"
                             recipes_df.iloc[[index], [9 + idx]] = s
                         for idx, num in enumerate([21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]):
                             s = "=VLOOKUP(F" + str(index + 2) + "&\":\"&J" + str(
-                                index + 2) + ",'CNF Data'!$B$1:$AI$2" + str(len(result.index)) + "," + str(num) + ",FALSE) * P" + str(index + 2)
+                                index + 2) + ",'CNF Data'!$B$1:$AI$2" + str(len(result.index)) + "," + str(
+                                num) + ",FALSE) * P" + str(index + 2)
                             recipes_df.iloc[[index], [15 + idx]] = s
                         premade_measurements.append("")
                         premade_units.append("")
@@ -144,10 +144,11 @@ class NutrientLookupService:
                             index + 2) + ",{1,2,3,4,5,6,7,8,9},1)))*{1,2,3,4,5,6,7,8,9})))")
                         for idx, num in enumerate([5, 6]):
                             s = "=VLOOKUP(F" + str(index + 2) + "&\":\"&J" + str(
-                                index + 2) + ",'CNF Data'!$B$1:$AI$" + str(len(result.index)) + "," + str(num) + ",FALSE)"
+                                index + 2) + ",'CNF Data'!$B$1:$AI$" + str(len(result.index)) + "," + str(
+                                num) + ",FALSE)"
                             recipes_df.iloc[[index], [9 + idx]] = s
                         for idx, num in enumerate([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]):
-                            s = "=VLOOKUP(E" + str(index + 2) + ", Premades!B1: R18, " + str(
+                            s = "=VLOOKUP(E" + str(index + 2) + ", Premades!B:R, " + str(
                                 num) + ", FALSE) * P" + str(index + 2)
                             recipes_df.iloc[[index], [15 + idx]] = s
                         ratios.append(
@@ -157,17 +158,17 @@ class NutrientLookupService:
                             "=C" + str(index + 2) + "*L" + str(index + 2) + "/H" + str(index + 2) + "* 100"
                         )
                         premade_measurements.append(
-                            "=VLOOKUP(E" + str(index + 2) + ", Premades!B1: R18, 2, FALSE)"
+                            "=VLOOKUP(E" + str(index + 2) + ", Premades!B:R, 2, FALSE)"
                         )
                         premade_units.append(
-                            "=VLOOKUP(E" + str(index + 2) + ", Premades!B1: R18, 3, FALSE)"
+                            "=VLOOKUP(E" + str(index + 2) + ", Premades!B:R, 3, FALSE)"
                         )
 
                 elif row['source'] == "Premade":
                     amounts.append("")
                     units.append("")
                     for idx, num in enumerate([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]):
-                        s = "=VLOOKUP(E" + str(index + 2) + ", Premades!B1: R18, " + str(
+                        s = "=VLOOKUP(E" + str(index + 2) + ", Premades!B:R, " + str(
                             num) + ", FALSE) * P" + str(index + 2)
                         recipes_df.iloc[[index], [15 + idx]] = s
                     ratios.append(
@@ -177,12 +178,11 @@ class NutrientLookupService:
                         "=C" + str(index + 2)
                     )
                     premade_measurements.append(
-                        "=VLOOKUP(E" + str(index + 2) + ", Premades!B1: R18, 2, FALSE)"
+                        "=VLOOKUP(E" + str(index + 2) + ", Premades!B:R, 2, FALSE)"
                     )
                     premade_units.append(
-                        "=VLOOKUP(E" + str(index + 2) + ", Premades!B1: R18, 3, FALSE)"
+                        "=VLOOKUP(E" + str(index + 2) + ", Premades!B:R, 3, FALSE)"
                     )
-
                 elif row['name'] == "Recipe":
                     start_row = index
                     amounts.append("")
@@ -191,6 +191,22 @@ class NutrientLookupService:
                     ratios.append("")
                     premade_measurements.append("")
                     premade_units.append("")
+
+                elif row['source'] == "Recipe":
+                    amounts.append("")
+                    units.append("")
+                    ratios.append(
+                        "=C" + str(index + 2) + "/N" + str(index + 2)
+                    )
+                    in_grams.append(
+                        "=C" + str(index + 2)
+                    )
+                    premade_measurements.append("100")
+                    premade_units.append("g")
+                    for idx, num in enumerate([4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]):
+                        s = "=VLOOKUP(E" + str(index + 2) + ", E:AD, " + str(
+                            num + 9) + ", FALSE) * P" + str(index + 2)
+                        recipes_df.iloc[[index], [15 + idx]] = s
 
                 elif row['name'] == "Total":
                     amounts.append("")
@@ -222,7 +238,6 @@ class NutrientLookupService:
             recipes_df.drop(['new_col'], axis=1).to_excel(writer, sheet_name="Recipes")
             result.to_excel(writer, sheet_name="CNF Data")
             premades.to_excel(writer, sheet_name="Premades")
-            monica.to_excel(writer, sheet_name="Monica")
 
             # Assign the workbook and worksheet
             worksheet = writer.sheets['Recipes']
